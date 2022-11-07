@@ -145,7 +145,7 @@ auction --> Auction related_name='auction_watchlist'
 
 class Watchlist(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_watchlist')
-    auctions = models.ForeignKey(Auction, on_delete=models.CASCADE, related_name='auction_watchlist')
+    auction = models.ForeignKey(Auction, on_delete=models.CASCADE, related_name='auction_watchlist')
 
     def __str__(self):
         return f"{self.auctions} in {self.user} watchlist"
