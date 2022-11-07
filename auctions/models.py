@@ -14,6 +14,7 @@ Model Category
 
 '''
 
+
 class Category(models.Model):
     ELECTRONICS = 'ELE'
     COLLECTIBLES_ART = 'COA'
@@ -49,8 +50,7 @@ class Category(models.Model):
 
     def get_absolute_url(self):
         pass
-        #return reverse('view_name', )  # TODO:maybe not be necessary If no need to display a page with the categories
-
+        # return reverse('view_name', )  # TODO:maybe not be necessary If no need to display a page with the categories
 
 
 ''' 
@@ -90,6 +90,7 @@ class Auction(models.Model):
     class Meta:
         verbose_name = "Auction"
         verbose_name_plural = "Auctions"
+
 
 '''
 Model Bid:
@@ -148,7 +149,7 @@ class Watchlist(models.Model):
     auction = models.ForeignKey(Auction, on_delete=models.CASCADE, related_name='auction_watchlist')
 
     def __str__(self):
-        return f"{self.auctions} in {self.user} watchlist"
+        return f"{self.auction} in {self.user} watchlist"
 
     def get_absolute_url(self):
         return reverse('view name', kwargs={'pk': self.pk})
@@ -157,5 +158,3 @@ class Watchlist(models.Model):
         verbose_name = 'Watchlist'
         verbose_name_plural = 'Watchlist'
         constraints = [models.UniqueConstraint(fields=['user', 'auction'], name="no_doubles")]
-
-
