@@ -102,7 +102,7 @@ bidding date
 
 class Bid(models.Model):
     bidder = models.ForeignKey(User, on_delete=models.CASCADE, related_name="bidder")
-    auction = models.ForeignKey(Auction, on_delete=models.CASCADE, related_name="auction")
+    auction = models.ForeignKey(Auction, on_delete=models.CASCADE, related_name="bid_auction")
     value = models.DecimalField(max_digits=6, decimal_places=2, default=0, validators=[MinValueValidator(0.1)])
     bidding_date = models.DateTimeField(auto_now_add=True)
 
@@ -118,14 +118,14 @@ class Bid(models.Model):
 '''
 Model Comment:
 commenter --> User related_name="commenter"
-auction --> auction related_name="auction"
+auction --> auction related_name="comment_auction"
 content
 '''
 
 
 class Comment(models.Model):
     commenter = models.ForeignKey(User, on_delete=models.CASCADE, related_name="commenter")
-    auction = models.ForeignKey(Auction, on_delete=models.CASCADE, related_name="auction")
+    auction = models.ForeignKey(Auction, on_delete=models.CASCADE, related_name="comment_auction")
     content = models.CharField(max_length=512)
 
     def __str__(self):
