@@ -76,7 +76,7 @@ class Auction(models.Model):
                                         validators=[MinValueValidator(0.1)])
 
     image = models.ImageField(blank=True)  # image is optional
-    category = models.ManyToManyField(Category, on_delete=models.CASCADE, related_name="category")  # if I have a
+    category = models.ManyToManyField(Category, related_name="category")  # if I have a
     # category I can access all the auctions that category is a category of.
     posting_date = models.DateTimeField(auto_now_add=True)
     active = models.BooleanField(default=True)  # TODO make this field invisible.
