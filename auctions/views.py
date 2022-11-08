@@ -1,4 +1,5 @@
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import render
@@ -64,6 +65,8 @@ def register(request):
         return render(request, "auctions/register.html")
 
 
+# log in decorator:
+@login_required
 def listing(request):
     if request.method == 'POST':
         form = AuctionForm(request.POST)
