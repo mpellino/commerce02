@@ -3,9 +3,9 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import render
 from django.urls import reverse
+from .forms import AuctionForm
 
-
-from .models import User
+from .models import User, Auction
 
 
 def index(request):
@@ -65,4 +65,12 @@ def register(request):
 
 
 def listing(request):
-    pass
+    if request.method == 'POST':
+        form = AuctionForm(request.POST)
+        if form.is_valid():
+            pass
+    else:
+        form = AuctionForm()
+        print("form created?")
+    return render(request, "auctions/listing.html", {'form': form})
+

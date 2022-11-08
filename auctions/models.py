@@ -67,6 +67,34 @@ active (boolean)
 
 
 class Auction(models.Model):
+    ELECTRONICS = 'ELE'
+    COLLECTIBLES_ART = 'COA'
+    HOME_GARDEN = 'HOG'
+    CLOTHING_SHOES_ACCESSORIES = 'CSA'
+    TOYS_HOBBIES = 'TOH'
+    SPORTING_GOODS = 'SPO'
+    BOOKS_MOVIES_MUSIC = 'BMM'
+    HEALTH_BEAUTY = 'HEB'
+    BUSINESS_INDUSTRIAL = 'BUI'
+    BABY_ESSENTIALS = 'BAB'
+    PET_SUPPLY = 'PET'
+    OTHER = 'OTH'
+
+    CATEGORY_CHOICES = [
+        (ELECTRONICS, 'Electronics'),
+        (COLLECTIBLES_ART, 'Collectibles & Art'),
+        (HOME_GARDEN, 'Home & Garden'),
+        (CLOTHING_SHOES_ACCESSORIES, 'Clothing, Shoes & Accessories'),
+        (TOYS_HOBBIES, 'Toys & Hobbies'),
+        (SPORTING_GOODS, 'Sporting Goods'),
+        (BOOKS_MOVIES_MUSIC, 'Books, Movies & Music'),
+        (HEALTH_BEAUTY, 'Health & Beauty'),
+        (BUSINESS_INDUSTRIAL, 'Business & Industrial'),
+        (BABY_ESSENTIALS, 'Baby Essentials'),
+        (PET_SUPPLY, 'Pet Supply'),
+        (OTHER, 'Other')
+    ]
+
     seller = models.ForeignKey(User, on_delete=models.CASCADE, related_name="seller")  # from a user i can access all
     # the auction that user is a seller of
     title = models.CharField(max_length=64)
@@ -76,7 +104,7 @@ class Auction(models.Model):
                                         validators=[MinValueValidator(0.1)])
 
     image = models.ImageField(blank=True)  # image is optional
-    category = models.ManyToManyField(Category, related_name="category")  # if I have a
+    category = models.CharField(choices=CATEGORY_CHOICES, default=OTHER, max_length= 3)  # if I have a
     # category I can access all the auctions that category is a category of.
     posting_date = models.DateTimeField(auto_now_add=True)
     active = models.BooleanField(default=True)  # TODO make this field invisible.
