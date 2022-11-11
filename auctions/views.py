@@ -10,7 +10,8 @@ from .models import User, Auction
 
 
 def index(request):
-    return render(request, "auctions/index.html")
+    context = {"auctions": Auction.objects.all()}
+    return render(request, "auctions/index.html", context)
 
 
 def login_view(request):
@@ -71,7 +72,11 @@ def listing(request):
     if request.method == 'POST':
         form = AuctionForm(request.POST)
         if form.is_valid():
-            pass
+            valid_form = form.save(commit=False)
+            valid_form.seller = request.user
+            valid_form.save()
+            return HttpResponse('Hurray, saved!')
+
     else:
         form = AuctionForm()
         print("form created?")

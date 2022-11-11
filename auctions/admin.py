@@ -4,7 +4,7 @@ from django.contrib.auth.admin import UserAdmin
 
 # Register your models here.
 
-from .models import User
+from .models import User, Auction
 
 admin.site.register(User, UserAdmin)
-
+admin.site.register(Auction)

@@ -1,7 +1,7 @@
 # import form class from Django
-from django import  forms
+from django import forms
+from django.forms import models
 
-#import models
 from .models import Auction
 
 # model for for Auction

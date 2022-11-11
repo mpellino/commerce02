@@ -13,8 +13,9 @@ class User(AbstractUser):
 Model Category
 
 '''
-
-
+# Initially I wanted to use a model that store categories and have them in relation with the auction listing. Its kind
+# of complicated so I opt to have a choice selection in the Auction Model.
+'''
 class Category(models.Model):
     ELECTRONICS = 'ELE'
     COLLECTIBLES_ART = 'COA'
@@ -51,7 +52,7 @@ class Category(models.Model):
     def get_absolute_url(self):
         pass
         # return reverse('view_name', )  # TODO:maybe not be necessary If no need to display a page with the categories
-
+'''
 
 ''' 
 Model Auction: 
@@ -103,7 +104,7 @@ class Auction(models.Model):
                                         default=0,
                                         validators=[MinValueValidator(0.1)])
 
-    image = models.ImageField(blank=True)  # image is optional
+    image = models.URLField(blank=True, max_length=200)  # image is optional
     category = models.CharField(choices=CATEGORY_CHOICES, default=OTHER, max_length= 3)  # if I have a
     # category I can access all the auctions that category is a category of.
     posting_date = models.DateTimeField(auto_now_add=True)
@@ -113,7 +114,7 @@ class Auction(models.Model):
         return f"{self.title}. Seller: {self.seller}, posted on {self.posting_date}"
 
     def get_absolute_url(self):
-        return reverse('view_name', kwargs={'pk': self.pk})
+        return reverse('auction', kwargs={'pk': self.pk}) # TODO: check on this
 
     class Meta:
         verbose_name = "Auction"
