@@ -68,7 +68,7 @@ def register(request):
 
 # log in decorator:
 @login_required
-def listing(request):
+def create_listing(request):
     if request.method == 'POST':
         form = AuctionForm(request.POST)
         if form.is_valid():

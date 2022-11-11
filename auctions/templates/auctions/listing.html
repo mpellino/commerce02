@@ -3,7 +3,7 @@
 {% block body %}
     <h2>Create new listing</h2>
 
-    <form action= "{% url 'listing' %}" method="post">
+    <form action= "{% url 'create_listing' %}" method="post">
         {% csrf_token %}
         {{ form.as_p }}
         <input type="submit" value="Submit">
