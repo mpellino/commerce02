@@ -1,7 +1,7 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-
+<!---
     <h2>Active Listings</h2>
     {%  for auction in auctions %}
         <h3> {{auction.title}} </h3>
@@ -10,5 +10,20 @@
         <strong>Starting auction price: {{ auction.initial_price }}</strong>
         <p> {{ auction.get_category_display }}</p>
     {% endfor %}
+--->
+
+<div class="grid-wrapper">
+    {% for auction in auctions %}
+        <div class="grid-item">
+            <h3> {{auction.title}} </h3>
+            <p> {{ auction.description }}</p>
+            {% if auction.image %}
+                <img src="{{ auction.image }}" alt="{{auction.title}}">
+            {% endif %}
+            <strong>Starting auction price: {{ auction.initial_price }}</strong>
+            <p> {{ auction.get_category_display }}</p>
+        </div>
+  {% endfor %}
+</div>
 
 {% endblock %}
