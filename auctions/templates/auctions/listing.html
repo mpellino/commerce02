@@ -1,12 +1,13 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    <h2>Create new listing</h2>
 
-    <form action= "{% url 'create_listing' %}" method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <input type="submit" value="Submit">
-    </form>
+    <h3> {{auction.title}} </h3>
+            <p> {{ auction.description }}</p>
+            {% if auction.image %}
+                <img src="{{ auction.image }}" alt="{{auction.title}}">
+            {% endif %}
+            <strong>Starting auction price: {{ auction.initial_price }}</strong>
+            <p> {{ auction.get_category_display }}</p>
 
 {% endblock %}

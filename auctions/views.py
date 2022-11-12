@@ -80,5 +80,11 @@ def create_listing(request):
     else:
         form = AuctionForm()
         print("form created?")
-    return render(request, "auctions/listing.html", {'form': form})
+    return render(request, "auctions/create_listing.html", {'form': form})
 
+
+@login_required
+def listing(request, listing_id):
+    listing_object = Auction.objects.get(pk=listing_id)
+    context = {'auction': listing_object}
+    return render(request, "auctions/listing.html", context)
