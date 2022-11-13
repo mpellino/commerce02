@@ -88,3 +88,16 @@ def listing(request, listing_id):
     listing_object = Auction.objects.get(pk=listing_id)
     context = {'auction': listing_object}
     return render(request, "auctions/listing.html", context)
+
+
+@login_required
+def watchlist(request): # TODO: watchlist list associate with the user from tbhe request
+    return render(request, "auctions/watchlist.html")
+
+
+@login_required
+def add_remove_from_watchlist(request, listing_id):
+    #listing_object = Auction.objects.get(pk=listing_id)
+    # add onto wishlist
+
+    pass
