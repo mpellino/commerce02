@@ -1,5 +1,19 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    TODO
+    <h2>Watchlist</h2>
+    <div class="grid-wrapper">
+    {% for auction in watchlist_auctions %}
+        <div class="grid-item">
+            <h3> {{auction.title}} </h3>
+            <p> {{ auction.description }}</p>
+            {% if auction.image %}
+                <img src="{{ auction.image }}" alt="{{auction.title}}">
+            {% endif %}
+            <strong>Starting auction price: {{ auction.initial_price }}</strong>
+            <p> {{ auction.get_category_display }}</p>
+            <a href="{% url 'listing' auction.id %}" class="btn btn-primary"> Go to auction page </a>
+        </div>
+    {% endfor %}
+    </div>
 {% endblock %}

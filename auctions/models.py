@@ -105,8 +105,7 @@ class Auction(models.Model):
                                         validators=[MinValueValidator(0.1)])
 
     image = models.URLField(blank=True, max_length=200)  # image is optional
-    category = models.CharField(choices=CATEGORY_CHOICES, default=OTHER, max_length= 3)  # if I have a
-    # category I can access all the auctions that category is a category of.
+    category = models.CharField(choices=CATEGORY_CHOICES, default=OTHER, max_length= 3)
     posting_date = models.DateTimeField(auto_now_add=True)
     active = models.BooleanField(default=True)  # TODO make this field invisible.
 

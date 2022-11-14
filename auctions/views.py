@@ -6,7 +6,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from .forms import AuctionForm
 
-from .models import User, Auction
+from .models import User, Auction, Watchlist
 
 
 def index(request):
@@ -92,7 +92,14 @@ def listing(request, listing_id):
 
 @login_required
 def watchlist(request): # TODO: watchlist list associate with the user from tbhe request
-    return render(request, "auctions/watchlist.html")
+    print(request.user)
+    watchlist_objects = Watchlist.objects.filter(user=request.user)
+    auction_objects = Auction.objects.filter(auction_watchlist__in=watchlist_objects).all()
+    print(watchlist_objects)
+    print(auction_objects)
+    context = {'watchlist_auctions': auction_objects}
+    print(context)
+    return render(request, "auctions/watchlist.html", context)
 
 
 @login_required
