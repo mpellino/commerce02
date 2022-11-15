@@ -11,7 +11,10 @@
         <p> {{ auction.get_category_display }}</p>
     {% endfor %}
 --->
-
+{% if message %}
+    <p><b>{{ message }}</b></p>
+    <a href="{% url 'index' %}" class="btn btn-light btn-sm"> Return to Auction page </a>
+{% endif %}
 <div class="grid-wrapper">
     {% for auction in auctions %}
         <div class="grid-item">
@@ -25,15 +28,9 @@
             <a href="{% url 'listing' auction.id %}" class="btn btn-primary"> Go to auction page </a>
             <form action = "{% url 'add_remove_from_watchlist' auction.id %}" method = "post">
                 {% csrf_token %}
-                {% if auction.title == "Consciousness" %}
-                    <button type="submit" class="btn btn-light btn-sm">Add to watchlist</button>
-                {% else %}
-                    <button type="submit" class="btn btn-light btn-sm">Remove from watchlist</button>
-                {% endif %}
+                    <button type="submit" class="btn btn-light btn-sm">Add/Remove watchlist</button>
             </form>
 
-
-            <!--- # TODO: add a button to this form that "add" if item in watchlist, "remove" otherwise --->
         </div>
   {% endfor %}
 </div>

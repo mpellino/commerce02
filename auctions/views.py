@@ -4,6 +4,7 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import render
 from django.urls import reverse
+from django.core.exceptions import ValidationError
 from .forms import AuctionForm
 
 from .models import User, Auction, Watchlist
@@ -92,13 +93,9 @@ def listing(request, listing_id):
 
 @login_required
 def watchlist(request):
-    print(request.user)
     watchlist_objects = Watchlist.objects.filter(user=request.user)
     auction_objects = Auction.objects.filter(auction_watchlist__in=watchlist_objects).all()
-    print(watchlist_objects)
-    print(auction_objects)
     context = {'watchlist_auctions': auction_objects}
-    print(context)
     return render(request, "auctions/watchlist.html", context)
 
 
@@ -106,6 +103,13 @@ def watchlist(request):
 def add_remove_from_watchlist(request, listing_id):
     if request.method == "POST":
         listing_object = Auction.objects.get(pk=listing_id)
-
-    # add onto wishlist
-    pass
+        new_wishlist_item = Watchlist(user=request.user, auction=listing_object)
+        try:
+            new_wishlist_item.validate_constraints()
+            new_wishlist_item.save()
+            return render(request, "auctions/index.html", {'message': "Item has been added to the Watchlist"})
+        except ValidationError:
+            current_wishlist_item = Watchlist.objects.get(user=request.user, auction=listing_object)
+            current_wishlist_item.delete()
+            return render(request, "auctions/index.html", {'message': "Item has been removed from the Watchlist"})
+    return HttpResponseRedirect(reverse("index"))
