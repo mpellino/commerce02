@@ -91,7 +91,7 @@ def listing(request, listing_id):
 
 
 @login_required
-def watchlist(request): # TODO: watchlist list associate with the user from tbhe request
+def watchlist(request):
     print(request.user)
     watchlist_objects = Watchlist.objects.filter(user=request.user)
     auction_objects = Auction.objects.filter(auction_watchlist__in=watchlist_objects).all()
@@ -104,7 +104,8 @@ def watchlist(request): # TODO: watchlist list associate with the user from tbhe
 
 @login_required
 def add_remove_from_watchlist(request, listing_id):
-    #listing_object = Auction.objects.get(pk=listing_id)
-    # add onto wishlist
+    if request.method == "POST":
+        listing_object = Auction.objects.get(pk=listing_id)
 
+    # add onto wishlist
     pass
