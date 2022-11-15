@@ -99,11 +99,17 @@ def watchlist(request):
     return render(request, "auctions/watchlist.html", context)
 
 
+
 @login_required
 def add_remove_from_watchlist(request, listing_id):
     if request.method == "POST":
         listing_object = Auction.objects.get(pk=listing_id)
         new_wishlist_item = Watchlist(user=request.user, auction=listing_object)
+        # the constraints are in the Meta class of the Model. The check to see whether the item is already
+        # present in the Model is performed by the model method.
+        # if Item and user are not in the Watchlist Model, item is added, if exception is raised then item
+        # and user are already presents so the item is removed.
+        # TODO: test if it works when there are 2 user with the same item. Make sure it does not delete for both
         try:
             new_wishlist_item.validate_constraints()
             new_wishlist_item.save()
