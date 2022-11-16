@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import MinValueValidator
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.urls import reverse
 
@@ -138,10 +139,36 @@ class Bid(models.Model):
     def __str__(self):
         return f"Bid of {self.value}, made by: {self.bidder} in date: {self.bidding_date}"
 
+    def clean(self, *args, **kwargs ):
+        auction_item = Auction.objects.filter(pk=self.pk)
+        auction_seller = auction_item.seller.get()
+        try:
+            auction_highest_bid = Bid.objects.filter(auction=self.pk).order_by('-value')[0]
+        except Bid.DoesNotExist:
+            pass
+        # check that the bid is not lower than 0
+        if self.value < 1:
+            raise ValidationError("Bid Value cannot be less than 1")
+        # check that the bidder is not the seller
+        if self.bidder == auction_seller:
+            raise ValidationError("Bidding on one own Auction is not allow")
+        # check that the bid is higher than the last bid
+        if auction_highest_bid:
+            if self.value <= auction_highest_bid:
+                raise ValidationError("Bid is lower that highest bid")
+        super().clean(*args, **kwargs)
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        super().save(*args, **kwargs)
+
+
     class Meta:
         get_latest_by = "value"
         verbose_name = "Bid"
         verbose_name_plural = "Bids"
+
+
 
 
 '''
