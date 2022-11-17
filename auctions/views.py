@@ -93,8 +93,7 @@ def listing(request, listing_id):
 
 @login_required
 def watchlist(request):
-    watchlist_objects = Watchlist.objects.filter(user=request.user)
-    auction_objects = Auction.objects.filter(auction_watchlist__in=watchlist_objects).all()
+    auction_objects = Auction.objects.filter(auction_watchlist__user_id=request.user.id)
     context = {'watchlist_auctions': auction_objects}
     return render(request, "auctions/watchlist.html", context)
 
