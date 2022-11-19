@@ -12,6 +12,14 @@
                 {% endif %}
         <p><b>Starting auction price: {{ auction.initial_price }}</b></p>
         <p> {{ auction.get_category_display }}</p>
+    <div id="div-bid-form">
+        <form action= "{% url 'bid' auction.id %}" method="post">
+        {% csrf_token %}
+        {{ form }}
+        <input type="submit" value="Submit">
+    </form>
+
+    </div>
     </div>
 {% endblock %}
 

@@ -6,7 +6,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.core.exceptions import ValidationError
 from .forms import AuctionForm
-
+from .forms import BidForm
 from .models import User, Auction, Watchlist
 
 
@@ -52,7 +52,6 @@ def register(request):
             return render(request, "auctions/register.html", {
                 "message": "Passwords must match."
             })
-
         # Attempt to create new user
         try:
             user = User.objects.create_user(username, email, password)
@@ -67,7 +66,6 @@ def register(request):
         return render(request, "auctions/register.html")
 
 
-# log in decorator:
 @login_required
 def create_listing(request):
     if request.method == 'POST':
@@ -85,9 +83,10 @@ def create_listing(request):
 
 
 @login_required
+# Listing sends also the Bid Form!
 def listing(request, listing_id):
     listing_object = Auction.objects.get(pk=listing_id)
-    context = {'auction': listing_object}
+    context = {'auction': listing_object, 'form': BidForm()}
     return render(request, "auctions/listing.html", context)
 
 
@@ -96,7 +95,6 @@ def watchlist(request):
     auction_objects = Auction.objects.filter(auction_watchlist__user_id=request.user.id)
     context = {'watchlist_auctions': auction_objects}
     return render(request, "auctions/watchlist.html", context)
-
 
 
 @login_required
@@ -118,3 +116,19 @@ def add_remove_from_watchlist(request, listing_id):
             current_wishlist_item.delete()
             return render(request, "auctions/index.html", {'message': "Item has been removed from the Watchlist"})
     return HttpResponseRedirect(reverse("index"))
+
+
+@login_required
+def bid(request, listing_id):
+    if request.method == "POST":
+        form = BidForm(request.POST)
+        if form.is_valid():
+            pass
+        else:
+            print(f"check on the form errors: {form.errors}")
+            listing_object = Auction.objects.get(pk=listing_id)
+            context = {'auction': listing_object, 'form': form}
+            return render(request, "auctions/listing.html", context)
+
+
+        return HttpResponse('Hurray, nothing happened!')

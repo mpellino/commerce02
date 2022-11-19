@@ -5,6 +5,7 @@ from django.forms import models
 from .models import Auction
 from .models import Bid
 
+
 # model for for Auction
 class AuctionForm(forms.ModelForm):
     class Meta:
@@ -16,4 +17,4 @@ class AuctionForm(forms.ModelForm):
 class BidForm(forms.ModelForm):
     class Meta:
         model = Bid
-        fields = ['value']
+        fields = ['value', 'bidder','auction']

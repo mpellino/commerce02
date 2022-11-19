@@ -131,19 +131,23 @@ bidding date
 
 
 class Bid(models.Model):
-    bidder = models.ForeignKey(User, on_delete=models.CASCADE, related_name="bidder")
+    bidder = models.ForeignKey(User, on_delete=models.CASCADE, related_name="bidder", blank=True)
     auction = models.ForeignKey(Auction, on_delete=models.CASCADE, related_name="bid_auction")
-    value = models.DecimalField(max_digits=6, decimal_places=2, default=0, validators=[MinValueValidator(0.1)])
+    value = models.DecimalField(max_digits=6, decimal_places=2, default=0)
     bidding_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"Bid of {self.value}, made by: {self.bidder} in date: {self.bidding_date}"
 
     def clean(self, *args, **kwargs ):
-        auction_item = Auction.objects.filter(pk=self.pk)
-        auction_seller = auction_item.seller.get()
+        auction_seller = Auction.objects.filter(bid_auction=self.pk).first().seller
+        auction_initial_price = Auction.objects.filter(bid_auction=self.pk).first().initial_price
+        print(auction_seller)
+        print(self.value)
+        print(f"self bidder:{self.bidder}")
+        print(f"self.auction:{self.auction}")
         try:
-            auction_highest_bid = Bid.objects.filter(auction=self.pk).order_by('-value')[0]
+            auction_highest_bid = Bid.objects.filter(auction=self.pk).order_by('-value').first()
         except Bid.DoesNotExist:
             pass
         # check that the bid is not lower than 0
@@ -152,11 +156,14 @@ class Bid(models.Model):
         # check that the bidder is not the seller
         if self.bidder == auction_seller:
             raise ValidationError("Bidding on one own Auction is not allow")
-        # check that the bid is higher than the last bid
+        # check that the bid is higher than the last bid of lower than the initial price.
+        if self.value <= auction_initial_price:
+            raise ValidationError("Bid is below initial price")
         if auction_highest_bid:
             if self.value <= auction_highest_bid:
                 raise ValidationError("Bid is lower that highest bid")
         super().clean(*args, **kwargs)
+
 
     def save(self, *args, **kwargs):
         self.full_clean()
