@@ -137,27 +137,32 @@ class Bid(models.Model):
     bidding_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Bid of {self.value}, made by: {self.bidder} in date: {self.bidding_date}"
+        return f"Bid of {self.value}, made by: {self.bidder} on auction: {self.auction}, in date: {self.bidding_date}"
 
     def clean(self, *args, **kwargs ):
-        auction_seller = Auction.objects.filter(bid_auction=self.pk).first().seller
-        auction_initial_price = Auction.objects.filter(bid_auction=self.pk).first().initial_price
-        print(auction_seller)
-        print(self.value)
+        auction_seller = self.auction.seller
+        auction_initial_price = self.auction.initial_price
+
+        print(self)
+        print(f"initial price: {auction_initial_price}")
         print(f"self bidder:{self.bidder}")
         print(f"self.auction:{self.auction}")
+        print(f"{self.bidder} == {auction_seller}")
         try:
-            auction_highest_bid = Bid.objects.filter(auction=self.pk).order_by('-value').first()
+            auction_highest_bid = Bid.objects.filter(auction=self.auction)\
+                .values_list('value', flat=True).latest()
         except Bid.DoesNotExist:
-            pass
+            auction_highest_bid = 0
+        print(auction_highest_bid)
         # check that the bid is not lower than 0
         if self.value < 1:
             raise ValidationError("Bid Value cannot be less than 1")
         # check that the bidder is not the seller
         if self.bidder == auction_seller:
+            print(f"{self.bidder} == {auction_seller}")
             raise ValidationError("Bidding on one own Auction is not allow")
         # check that the bid is higher than the last bid of lower than the initial price.
-        if self.value <= auction_initial_price:
+        if self.value < auction_initial_price:
             raise ValidationError("Bid is below initial price")
         if auction_highest_bid:
             if self.value <= auction_highest_bid:

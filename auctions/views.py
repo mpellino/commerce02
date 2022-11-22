@@ -7,7 +7,7 @@ from django.urls import reverse
 from django.core.exceptions import ValidationError
 from .forms import AuctionForm
 from .forms import BidForm
-from .models import User, Auction, Watchlist
+from .models import User, Auction, Watchlist,Bid
 
 
 def index(request):
@@ -84,9 +84,14 @@ def create_listing(request):
 
 @login_required
 # Listing sends also the Bid Form!
-def listing(request, listing_id):
+def listing(request, listing_id ):
     listing_object = Auction.objects.get(pk=listing_id)
-    context = {'auction': listing_object, 'form': BidForm()}
+    try:
+        auction_highest_bid = Bid.objects.filter(auction=listing_object) \
+            .values_list('value', flat=True).latest()
+    except Bid.DoesNotExist:
+        auction_highest_bid = 0
+    context = {'auction': listing_object, 'form': BidForm(), 'higher_bid': auction_highest_bid }
     return render(request, "auctions/listing.html", context)
 
 
@@ -121,14 +126,23 @@ def add_remove_from_watchlist(request, listing_id):
 @login_required
 def bid(request, listing_id):
     if request.method == "POST":
-        form = BidForm(request.POST)
+        listing_object = Auction.objects.get(pk=listing_id)
+        print(f"the view listing_object: {listing_object}")
+        partial_bid = Bid(bidder=request.user, auction=listing_object)
+        form = BidForm(request.POST, instance= partial_bid)
+        try:
+            auction_highest_bid = Bid.objects.filter(auction=listing_object) \
+                .values_list('value', flat=True).latest()
+        except Bid.DoesNotExist:
+            auction_highest_bid = 0
         if form.is_valid():
-            pass
+            form.save()
+            context = {'auction': listing_object, 'message': " The Bid was successfully placed! Good luck",
+                       'higher_bid': auction_highest_bid}
+            return render(request, "auctions/listing.html", context)
         else:
-            print(f"check on the form errors: {form.errors}")
-            listing_object = Auction.objects.get(pk=listing_id)
-            context = {'auction': listing_object, 'form': form}
+            # if form is not valid according to the Model constrains, return the listing.html passing back the
+            # form, The form has all the errors, and they are displayed automagically in the template.
+            context = {'auction': listing_object, 'form': form, 'higher_bid': auction_highest_bid}
             return render(request, "auctions/listing.html", context)
 
-
-        return HttpResponse('Hurray, nothing happened!')
