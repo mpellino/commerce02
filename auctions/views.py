@@ -11,7 +11,7 @@ from .models import User, Auction, Watchlist,Bid
 
 
 def index(request):
-    context = {"auctions": Auction.objects.all()}
+    context = {"auctions": Auction.objects.all().filter(active=True)}
     return render(request, "auctions/index.html", context)
 
 
@@ -88,12 +88,13 @@ def listing(request, listing_id ):
     listing_object = Auction.objects.get(pk=listing_id)
 
     try:
-        auction_highest_bid = Bid.objects.filter(auction=listing_object) \
+        auction_highest_bid = Bid.objects.filter(auction=listing_object).filter() \
             .values_list('value', flat=True).latest()
     except Bid.DoesNotExist:
         auction_highest_bid = 0
     context = {'auction': listing_object, 'form': BidForm(), 'higher_bid': auction_highest_bid }
     return render(request, "auctions/listing.html", context)
+
 
 @login_required
 def close_bid(request, listing_id):
