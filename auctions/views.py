@@ -86,6 +86,7 @@ def create_listing(request):
 # Listing sends also the Bid Form!
 def listing(request, listing_id ):
     listing_object = Auction.objects.get(pk=listing_id)
+
     try:
         auction_highest_bid = Bid.objects.filter(auction=listing_object) \
             .values_list('value', flat=True).latest()
@@ -94,6 +95,9 @@ def listing(request, listing_id ):
     context = {'auction': listing_object, 'form': BidForm(), 'higher_bid': auction_highest_bid }
     return render(request, "auctions/listing.html", context)
 
+@login_required
+def close_bid(request,listing_id):
+    pass
 
 @login_required
 def watchlist(request):

@@ -20,13 +20,18 @@
             {% if form %}
                 <input type="submit" value="Submit">
             {% endif %}
-    </form>
+        </form>
     <div id="div-bid-success">
         {% if message %}
             <p><b>{{ message }}</b></p>
             <a href="{% url 'listing' auction.id %}"> Return to auction page </a>
         {% endif %}
     </div>
+    </div>
+    <div id="div-closing-auction">
+        {% if auction.seller.id == user.id %}
+            <a href="{% url 'close_bid' auction.id %}" class="btn btn-secondary" >Close Bid</a>
+        {% endif %}
     </div>
     </div>
 {% endblock %}

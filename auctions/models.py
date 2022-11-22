@@ -109,6 +109,7 @@ class Auction(models.Model):
     category = models.CharField(choices=CATEGORY_CHOICES, default=OTHER, max_length= 3)
     posting_date = models.DateTimeField(auto_now_add=True)
     active = models.BooleanField(default=True)  # TODO make this field invisible.
+    winner = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name="winner")
 
     def __str__(self):
         return f"{self.title}. Seller: {self.seller}, posted on {self.posting_date}"
