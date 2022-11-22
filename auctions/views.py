@@ -96,8 +96,22 @@ def listing(request, listing_id ):
     return render(request, "auctions/listing.html", context)
 
 @login_required
-def close_bid(request,listing_id):
-    pass
+def close_bid(request, listing_id):
+    # close bid
+    if request.method == "POST":
+        print("post")
+        auction_object = Auction.objects.get(pk=listing_id)
+        auction_object.active = False
+    # assign winner
+        # get the winner id starting from the Bid Model, get the auction ordered by value (of the bid) and select the
+        # last bidder
+        winner_id = Bid.objects.filter(auction=listing_id).order_by('value').values_list('bidder', flat=True).latest()
+        auction_object.winner = User.objects.get(pk=winner_id)
+        auction_object.save()
+    else:
+        print("something is wrong")
+    return HttpResponse("done")
+
 
 @login_required
 def watchlist(request):

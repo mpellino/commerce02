@@ -30,7 +30,10 @@
     </div>
     <div id="div-closing-auction">
         {% if auction.seller.id == user.id %}
-            <a href="{% url 'close_bid' auction.id %}" class="btn btn-secondary" >Close Bid</a>
+            <form action="{% url 'close_bid' auction.id %}" method="post">
+                {% csrf_token %}
+                <input type="submit" class="btn btn-secondary" value="Close Bid">
+            </form>
         {% endif %}
     </div>
     </div>
