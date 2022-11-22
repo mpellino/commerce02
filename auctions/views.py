@@ -105,8 +105,8 @@ def close_bid(request, listing_id):
     # assign winner
         # get the winner id starting from the Bid Model, get the auction ordered by value (of the bid) and select the
         # last bidder
-        winner_id = Bid.objects.filter(auction=listing_id).order_by('value').values_list('bidder', flat=True).latest()
-        auction_object.winner = User.objects.get(pk=winner_id)
+        winner = User.objects.filter(bidder__auction_id=listing_id).order_by('bidder__value').last()
+        auction_object.winner = winner
         auction_object.save()
     else:
         print("something is wrong")
