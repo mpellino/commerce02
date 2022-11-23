@@ -11,7 +11,7 @@ from .models import User, Auction, Watchlist,Bid
 
 
 def index(request):
-    context = {"auctions": Auction.objects.all().filter(active=True)}
+    context = {"auctions": Auction.objects.all()}
     return render(request, "auctions/index.html", context)
 
 
@@ -86,13 +86,17 @@ def create_listing(request):
 # Listing sends also the Bid Form!
 def listing(request, listing_id ):
     listing_object = Auction.objects.get(pk=listing_id)
-
+    # Get the highest bit, if exists.Otherwise, set value to zero
     try:
         auction_highest_bid = Bid.objects.filter(auction=listing_object).filter() \
             .values_list('value', flat=True).latest()
     except Bid.DoesNotExist:
         auction_highest_bid = 0
-    context = {'auction': listing_object, 'form': BidForm(), 'higher_bid': auction_highest_bid }
+    # Create contex
+    context = {'auction': listing_object, 'form': BidForm(), 'higher_bid': auction_highest_bid}
+    # If winner exist, and it is the same as logged-in user, add congratulation message to context
+    if listing_object.winner == request.user:
+        context['winner_message'] = "Congratulation! You won this auction!"
     return render(request, "auctions/listing.html", context)
 
 

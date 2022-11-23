@@ -13,29 +13,37 @@
         <p><b>Starting auction price: {{ auction.initial_price }}</b></p>
         <p><b>Current Bid: {{ higher_bid }} </b></p>
         <p> {{ auction.get_category_display }}</p>
-    <div id="div-bid-form">
-        <form action= "{% url 'bid' auction.id %}" method="post">
-        {% csrf_token %}
-        {{ form }}
-            {% if form %}
-                <input type="submit" value="Submit">
-            {% endif %}
-        </form>
-    <div id="div-bid-success">
-        {% if message %}
-            <p><b>{{ message }}</b></p>
-            <a href="{% url 'listing' auction.id %}"> Return to auction page </a>
-        {% endif %}
-    </div>
-    </div>
-    <div id="div-closing-auction">
-        {% if auction.seller.id == user.id %}
-            <form action="{% url 'close_bid' auction.id %}" method="post">
-                {% csrf_token %}
-                <input type="submit" class="btn btn-secondary" value="Close Bid">
+    {% if auction.active == True %}
+        <div id="div-bid-form">
+            <form action= "{% url 'bid' auction.id %}" method="post">
+            {% csrf_token %}
+            {{ form }}
+                {% if form %}
+                    <input type="submit" value="Submit">
+                {% endif %}
             </form>
-        {% endif %}
-    </div>
+        <div id="div-bid-success">
+            {% if message %}
+                <p><b>{{ message }}</b></p>
+                <a href="{% url 'listing' auction.id %}"> Return to auction page </a>
+            {% endif %}
+        </div>
+        </div>
+        <div id="div-closing-auction">
+            {% if auction.seller.id == user.id %}
+                <form action="{% url 'close_bid' auction.id %}" method="post">
+                    {% csrf_token %}
+                    <input type="submit" class="btn btn-secondary" value="Close Bid">
+                </form>
+            {% endif %}
+        </div>
+    {% endif %}
+     {% if winner_message %}
+            <div id="winner-message">
+                <h1>{{ winner_message }}</h1>
+            </div>
+     {% endif %}
+
     </div>
 {% endblock %}
 

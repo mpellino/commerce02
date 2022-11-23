@@ -108,7 +108,7 @@ class Auction(models.Model):
     image = models.URLField(blank=True, max_length=200)  # image is optional
     category = models.CharField(choices=CATEGORY_CHOICES, default=OTHER, max_length= 3)
     posting_date = models.DateTimeField(auto_now_add=True)
-    active = models.BooleanField(default=True)  # TODO make this field invisible.
+    active = models.BooleanField(default=True)
     winner = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name="winner")
 
     def __str__(self):

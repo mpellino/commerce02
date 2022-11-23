@@ -23,6 +23,12 @@
             {% if auction.image %}
                 <img src="{{ auction.image }}" alt="{{auction.title}}">
             {% endif %}
+            {% if auction.active == False %}
+            <p id="first-txt">
+                    Auction Closed
+            </p>
+            {% endif %}
+
             <strong>Starting auction price: {{ auction.initial_price }}</strong>
             <p> {{ auction.get_category_display }}</p>
             <a href="{% url 'listing' auction.id %}" class="btn btn-primary"> Go to auction page </a>
