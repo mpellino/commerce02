@@ -4,9 +4,10 @@ from django.contrib.auth.admin import UserAdmin
 
 # Register your models here.
 
-from .models import User, Auction, Watchlist, Bid
+from .models import User, Auction, Watchlist, Bid, Comment
 
 admin.site.register(User, UserAdmin)
 admin.site.register(Auction)
 admin.site.register(Watchlist)
 admin.site.register(Bid)
+admin.site.register(Comment)
