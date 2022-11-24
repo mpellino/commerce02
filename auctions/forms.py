@@ -1,7 +1,7 @@
 # import form class from Django
 from django import forms
 from django.forms import models
-
+from django.forms import Textarea
 from .models import Auction
 from .models import Bid
 from .models import Comment
@@ -24,3 +24,4 @@ class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
         fields = ['content']
+        widgets = {'content': Textarea(attrs={'cols': 100, 'rows': 3})}
