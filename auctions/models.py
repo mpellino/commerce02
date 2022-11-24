@@ -195,9 +195,9 @@ content
 class Comment(models.Model):
     commenter = models.ForeignKey(User, on_delete=models.CASCADE, related_name="commenter")
     auction = models.ForeignKey(Auction, on_delete=models.CASCADE, related_name="comments")
-    content = models.CharField(max_length=512)
+    content = models.TextField(max_length=512)
     comment_date = models.DateTimeField(auto_now_add=True)
-    active = models.BooleanField(default=True)
+    active = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.commenter} commented on {self.auction}: {self.content}"
