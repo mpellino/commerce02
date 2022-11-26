@@ -26,6 +26,17 @@
             <li class="nav-item">
                 <a class="nav-link" href="{% url 'watchlist' %}">Watchlist</a>
             </li>
+            <li class="nav-item">
+                <div class="dropdown">
+                    <a href="My Top Link" class="nav-link">Categories</a>
+                    <div class="dropdown-content">
+                        <a href="My Link 1">Link 1 Title</a>
+                        <a href="My Link 2">Link 2 Title</a>
+                        <a href="My Link 3">Link 3 Title</a>
+                    </div>
+                </div>
+            </li>
+
             {% if user.is_authenticated %}
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
