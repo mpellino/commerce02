@@ -6,8 +6,8 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.core.exceptions import ValidationError
 from .forms import AuctionForm
-from .forms import BidForm
-from .models import User, Auction, Watchlist,Bid
+from .forms import BidForm, CommentForm
+from .models import User, Auction, Watchlist,Bid, Comment
 
 
 def index(request):
@@ -86,6 +86,7 @@ def create_listing(request):
 # Listing sends also the Bid Form!
 def listing(request, listing_id ):
     listing_object = Auction.objects.get(pk=listing_id)
+    comments = Comment.objects.filter(auction__id=listing_id)
     # Get the highest bit, if exists.Otherwise, set value to zero
     try:
         auction_highest_bid = Bid.objects.filter(auction=listing_object).filter() \
@@ -93,10 +94,13 @@ def listing(request, listing_id ):
     except Bid.DoesNotExist:
         auction_highest_bid = 0
     # Create contex
-    context = {'auction': listing_object, 'form': BidForm(), 'higher_bid': auction_highest_bid}
+    context = {'auction': listing_object, 'form': BidForm(),'comment_form': CommentForm(),  'higher_bid': auction_highest_bid}
     # If winner exist, and it is the same as logged-in user, add congratulation message to context
     if listing_object.winner == request.user:
         context['winner_message'] = "Congratulation! You won this auction!"
+
+    context["comments"] = comments
+
     return render(request, "auctions/listing.html", context)
 
 
@@ -167,6 +171,16 @@ def bid(request, listing_id):
             # form, The form has all the errors, and they are displayed automagically in the template.
             context = {'auction': listing_object, 'form': form, 'higher_bid': auction_highest_bid}
             return render(request, "auctions/listing.html", context)
+
+@login_required
+def comment(request,listing_id):
+    if request.method == "POST":
+        listing_object = Auction.objects.get(pk=listing_id)
+        partial_comment = Comment(commenter=request.user,auction=listing_object)
+        form = CommentForm(request.POST, instance=partial_comment)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse("listing", kwargs={'listing_id': listing_id}))
 
 
 def category(request, category_code):
