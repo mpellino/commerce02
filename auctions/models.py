@@ -157,11 +157,11 @@ class Bid(models.Model):
         print(auction_highest_bid)
         # check that the bid is not lower than 0
         if self.value < 1:
-            raise ValidationError("Bid Value cannot be less than 1")
+            raise ValidationError("Bid value cannot be less than one")
         # check that the bidder is not the seller
         if self.bidder == auction_seller:
             print(f"{self.bidder} == {auction_seller}")
-            raise ValidationError("Bidding on one own Auction is not allow")
+            raise ValidationError("Bidding on one's own auction is not allow")
         # check that the bid is higher than the last bid of lower than the initial price.
         if self.value < auction_initial_price:
             raise ValidationError("Bid is below initial price")

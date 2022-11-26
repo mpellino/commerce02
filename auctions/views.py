@@ -104,7 +104,6 @@ def listing(request, listing_id ):
 def close_bid(request, listing_id):
     # close bid
     if request.method == "POST":
-        print("post")
         auction_object = Auction.objects.get(pk=listing_id)
         auction_object.active = False
     # assign winner
@@ -115,7 +114,7 @@ def close_bid(request, listing_id):
         auction_object.save()
     else:
         print("something is wrong")
-    return HttpResponse("done")
+    return HttpResponseRedirect(reverse("index"))
 
 
 @login_required
