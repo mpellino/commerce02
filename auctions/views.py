@@ -169,3 +169,13 @@ def bid(request, listing_id):
             context = {'auction': listing_object, 'form': form, 'higher_bid': auction_highest_bid}
             return render(request, "auctions/listing.html", context)
 
+
+def category(request, category_code):
+    listing_objects = Auction.objects.filter(category__iexact=category_code).all() or None
+    first_object = Auction.objects.filter(category__iexact=category_code).first() or None
+    if first_object:
+        category = first_object.get_category_display()
+    else:
+        category = "No Item for the chosen category"
+    context = {"auctions": listing_objects, "category": category}
+    return render(request, "auctions/index.html", context)

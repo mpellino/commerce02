@@ -15,6 +15,9 @@
     <p><b>{{ message }}</b></p>
     <a href="{% url 'index' %}" class="btn btn-light btn-sm"> Return to Auction page </a>
 {% endif %}
+{% if category %}
+    <h3> Category: {{ category }} </h3>
+{% endif %}
 <div class="grid-wrapper">
     {% for auction in auctions %}
         <div class="grid-item">

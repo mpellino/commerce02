@@ -30,9 +30,18 @@
                 <div class="dropdown">
                     <a href="My Top Link" class="nav-link">Categories</a>
                     <div class="dropdown-content">
-                        <a href="My Link 1">Link 1 Title</a>
-                        <a href="My Link 2">Link 2 Title</a>
-                        <a href="My Link 3">Link 3 Title</a>
+                        <a href={% url 'category' 'ELE' %}>Electronics</a>
+                        <a href={% url 'category' 'COA' %}>Collectibles & Art</a>
+                        <a href={% url 'category' 'HOG' %}>Home & Garden</a>
+                        <a href={% url 'category' 'CSA' %}>Clothing, Shoes & Accessories</a>
+                        <a href={% url 'category' 'TOH' %}>Toys & Hobbies</a>
+                        <a href={% url 'category' 'SPO' %}>Sporting Goods</a>
+                        <a href={% url 'category' 'BMM' %}>Books, Movies & Music</a>
+                        <a href={% url 'category' 'HEB' %}>Health & Beauty</a>
+                        <a href={% url 'category' 'BUI' %}>Business & Industrial</a>
+                        <a href={% url 'category' 'BAB' %}>Baby Essentials</a>
+                        <a href={% url 'category' 'PET' %}>Pet Supply</a>
+                        <a href={% url 'category' 'OTH' %}>Other</a>
                     </div>
                 </div>
             </li>
